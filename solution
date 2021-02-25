@@ -1,0 +1,93 @@
+/**
+ * @param {number[][]} positions
+ * @return {number}
+ */
+var getMinDistSum = function(positions) {
+    
+    var findDistanceBeetwinTwoPoints = function(a,b){
+    //========================= WIP ==============================
+                console.log(Math.sqrt((Math.pow(b[1]-a[1]),2)+(Math.pow(a[0]-b[0]),2)));   
+        console.log("b1 "+ b[1]);
+        console.log(Math.pow(b[1]-a[1]),2);
+                console.log(Math.pow(a[0]-b[0]),2);
+
+
+        return Math.sqrt((Math.pow(b[1]-a[1]),2)+(Math.pow(a[0]-b[0]),2));
+    }
+    
+    
+    //Exceptions
+    if(positions.length <2){
+        return 0;
+    }
+    
+    if(positions.length == 2){
+        return findDistanceBeetwinTwoPoints(positions[0], positions[1]);
+    }
+    
+    
+    //surface calculation
+    // A = 1/2 ((xi*yi+1)-(xi+1*yi))
+    
+    let surfaceSubTotals = [];
+    
+    for(i=0; i<positions.length ; i++){
+        //loop the array when i > positions.length
+        if(i==positions.length-1){
+            surfaceSubTotals.push((positions[i][0]*positions[0][1])-(positions[0][0])*(positions[i][1]));
+        }
+        else{
+            surfaceSubTotals.push((positions[i][0]*positions[i+1][1])-(positions[i+1][0])*(positions[i][1]));
+        }
+        console.log("surfaceSubTotals (i="+i+") :" +surfaceSubTotals[i]);        
+    }
+    let A = surfaceSubTotals.reduce(function(a,b){return a+b},0) / 2;
+    console.log("A : "+ A);
+    
+    
+    //X-axis (abscisse) calculation
+    //XAxis = ((xi*yi+1)-(xi+1*yi))*(xi+xi+1))
+    
+    let XAxisSubTotal = [];
+    
+    for (i=0; i<positions.length;i++){
+        if(i==positions.length-1){
+            XAxisSubTotal.push((positions[i][0]*positions[0][1])-(positions[0][0])*(positions[i][1]))*(positions[i][0]+positions[0][0]);
+        }
+        else{
+            XAxisSubTotal.push(((positions[i][0]*positions[i+1][1])-(positions[i+1][0])*(positions[i][1]))*(positions[i][0]+positions[i+1][0]));
+        }
+        console.log("XAxisSubTotal (i="+i+") :" +XAxisSubTotal[i]);  
+    }
+    
+    let XAxis = XAxisSubTotal.reduce(function(a,b){return a+b},0);
+    console.log("XAxis = "+XAxis);
+
+    
+    //Y-axis (ordonnée) calculation
+    //YAxis = ((xi*yi+1)-(xi+1*yi))*(yi+yi+1))
+    
+        let YAxisSubTotal = [];
+    
+    for (i=0; i<positions.length;i++){
+        if(i==positions.length-1){
+            YAxisSubTotal.push((positions[i][0]*positions[0][1])-(positions[0][0])*(positions[i][1]))*(positions[i][1]+positions[0][1]);
+        }
+        else{
+            YAxisSubTotal.push(((positions[i][0]*positions[i+1][1])-(positions[i+1][0])*(positions[i][1]))*(positions[i][1]+positions[i+1][1]));
+        }
+        console.log("YAxisSubTotal (i="+i+") :" +YAxisSubTotal[i]);  
+    }
+    
+    let YAxis = YAxisSubTotal.reduce(function(a,b){return a+b},0);
+    console.log("YAxis = "+YAxis);
+    
+    
+    //Gravity center calculation
+    let Gx = XAxis / (6 * A);
+    let Gy = YAxis / (6 * A);
+    let G = [Gx, Gy];
+    console.log("Gravity center : "+ G);
+    
+    
+};
